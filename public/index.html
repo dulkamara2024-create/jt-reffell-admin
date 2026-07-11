@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>J.T. Reffell Memorial French Friendship Primary — SIMS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0F2C4C; --navy-2:#17395C; --sky:#BFE0F5; --sky-deep:#6FAED9;
+  --gold:#D8A83B; --gold-deep:#B98826; --paper:#F7FAFC; --card:#FFFFFF;
+  --slate:#5B6B7C; --ink:#10202F; --line:#E1EAF1;
+  --success:#337A55; --success-bg:#E7F4EC; --warn:#B4791F; --warn-bg:#FBF0DD;
+  --danger:#B6473F; --danger-bg:#FBEAE8; --radius:10px;
+  --font-display:'Fraunces',serif; --font-body:'Manrope',sans-serif; --font-mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{font-family:var(--font-body);background:var(--paper);color:var(--ink);-webkit-font-smoothing:antialiased;}
+button{font-family:inherit;cursor:pointer;}
+input,select,textarea{font-family:inherit;}
+a{color:inherit;}
+.fr-tag{font-family:var(--font-display);font-style:italic;font-weight:500;color:var(--sky-deep);font-size:0.78rem;display:block;margin-top:2px;}
+.mono{font-family:var(--font-mono);}
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,var(--navy) 0%,var(--navy-2) 55%,#0B2138 100%);}
+.login-card{width:100%;max-width:420px;background:var(--card);border-radius:16px;padding:40px 38px;box-shadow:0 30px 80px rgba(0,0,0,0.35);}
+.login-card h1{font-family:var(--font-display);font-weight:700;font-size:1.4rem;color:var(--navy);margin:0 0 2px;}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:0.78rem;font-weight:700;color:var(--slate);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.03em;}
+.field input,.field select,.field textarea{width:100%;padding:11px 13px;border-radius:8px;border:1.5px solid var(--line);font-size:0.95rem;background:#fff;color:var(--ink);}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--sky-deep);outline-offset:1px;border-color:var(--sky-deep);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border-radius:8px;border:none;font-weight:700;font-size:0.9rem;}
+.btn-primary{background:var(--gold);color:var(--navy);}
+.btn-primary:hover{filter:brightness(1.06);}
+.btn-ghost{background:transparent;color:var(--navy);border:1.5px solid var(--line);}
+.btn-danger{background:var(--danger-bg);color:var(--danger);}
+.btn-block{width:100%;}
+.hint{font-size:0.78rem;color:var(--slate);margin-top:14px;line-height:1.5;}
+.err-banner{background:var(--danger-bg);color:var(--danger);border-radius:8px;padding:10px 14px;font-size:0.85rem;margin-bottom:14px;display:none;}
+#app{display:none;min-height:100vh;}
+.shell{display:flex;min-height:100vh;}
+.sidebar{width:230px;flex-shrink:0;background:var(--navy);color:var(--sky);display:flex;flex-direction:column;padding:22px 14px;}
+.side-brand{padding:0 8px 18px;border-bottom:1px solid rgba(191,224,245,0.18);margin-bottom:14px;}
+.side-brand .name{font-family:var(--font-display);font-weight:700;font-size:0.92rem;color:#fff;line-height:1.25;}
+.side-brand .loc{font-size:0.68rem;color:var(--sky-deep);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:0.86rem;font-weight:600;color:var(--sky);margin-bottom:2px;}
+.nav-item:hover{background:rgba(191,224,245,0.08);}
+.nav-item.active{background:var(--gold);color:var(--navy);}
+.side-user{margin-top:auto;padding:12px 8px;border-top:1px solid rgba(191,224,245,0.18);font-size:0.78rem;}
+.side-user .u-name{color:#fff;font-weight:700;}
+.side-user button{margin-top:8px;background:transparent;border:1px solid rgba(191,224,245,0.35);color:var(--sky);border-radius:6px;padding:6px 10px;font-size:0.75rem;width:100%;}
+.main{flex:1;padding:26px 32px;overflow-y:auto;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.topbar h2{font-family:var(--font-display);color:var(--navy);margin:0;font-size:1.4rem;}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:18px;}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.card-head h3{margin:0;font-size:1rem;color:var(--navy);}
+table{width:100%;border-collapse:collapse;font-size:0.86rem;}
+th{text-align:left;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.03em;color:var(--slate);padding:8px 10px;border-bottom:2px solid var(--line);}
+td{padding:9px 10px;border-bottom:1px solid var(--line);}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;font-size:0.72rem;font-weight:700;}
+.pill-navy{background:var(--sky);color:var(--navy);}
+.pill-success{background:var(--success-bg);color:var(--success);}
+.pill-warn{background:var(--warn-bg);color:var(--warn);}
+.pill-danger{background:var(--danger-bg);color:var(--danger);}
+.link-btn{background:none;border:none;color:var(--navy-2);font-weight:700;font-size:0.8rem;text-decoration:underline;padding:0;margin-right:8px;}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:18px;}
+.stat-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:16px;}
+.stat-card .lbl{font-size:0.74rem;color:var(--slate);text-transform:uppercase;letter-spacing:0.03em;}
+.stat-card .val{font-family:var(--font-display);font-size:1.6rem;color:var(--navy);font-weight:700;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.empty-state{color:var(--slate);font-size:0.85rem;padding:16px;text-align:center;}
+.overlay{position:fixed;inset:0;background:rgba(15,44,76,0.45);display:none;align-items:center;justify-content:center;z-index:50;}
+.overlay.show{display:flex;}
+.modal{background:#fff;border-radius:14px;padding:28px;width:100%;max-width:520px;max-height:88vh;overflow-y:auto;}
+.modal-foot{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+.toast-wrap{position:fixed;bottom:20px;right:20px;z-index:60;display:flex;flex-direction:column;gap:8px;}
+.toast{background:var(--navy);color:#fff;padding:11px 16px;border-radius:8px;font-size:0.85rem;box-shadow:0 8px 20px rgba(0,0,0,0.25);}
+.payslip-box{border:2px solid var(--navy);border-radius:10px;padding:22px;}
+.payslip-box .ps-head{display:flex;justify-content:space-between;border-bottom:2px solid var(--line);padding-bottom:12px;margin-bottom:14px;}
+.payslip-box .ps-net{background:var(--paper);border-radius:8px;padding:12px 16px;margin-top:14px;display:flex;justify-content:space-between;font-weight:700;color:var(--navy);}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <h1>J.T. Reffell Memorial French Friendship Primary</h1>
+    <span class="fr-tag">École — Système d'information scolaire</span>
+    <div id="loginErr" class="err-banner"></div>
+    <div style="margin-top:20px;">
+      <div class="field"><label>Email</label><input id="loginEmail" type="email" placeholder="you@jtreffell.edu.sl"></div>
+      <div class="field"><label>Password</label><input id="loginPassword" type="password" placeholder="••••••••" onkeydown="if(event.key==='Enter') login();"></div>
+      <button class="btn btn-primary btn-block" onclick="login()">Log in</button>
+    </div>
+    <div class="hint">Real accounts only. Ask your administrator for a login, or run <span class="mono">npm run seed</span> on the backend to create the first admin account.</div>
+  </div>
+</div>
+
+<div id="app">
+  <div class="shell">
+    <div class="sidebar">
+      <div class="side-brand">
+        <div class="name">J.T. Reffell Memorial<br>French Friendship Primary</div>
+        <div class="loc">Tower Hill, Freetown</div>
+      </div>
+      <div id="navItems"></div>
+      <div class="side-user">
+        <div class="u-name" id="sideUserName"></div>
+        <div id="sideUserRole"></div>
+        <button onclick="logout()">Log out</button>
+      </div>
+    </div>
+    <div class="main">
+      <div class="topbar"><h2 id="pageTitle">Dashboard</h2></div>
+      <div id="mainArea"></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="modalOverlay"><div class="modal" id="modalBody"></div></div>
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+/* =========================================================================
+   J.T. Reffell Memorial French Friendship Primary — SIMS
+   Real frontend, talks to the real backend API (relative /api/* — this
+   file is meant to be served BY that backend, e.g. via `npm start`).
+   ========================================================================= */
+
+const CLASSES = ["Class 1","Class 2","Class 3","Class 4","Class 5","Class 6"];
+const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday"];
+const SUBJECTS = ["English","French","Mathematics","Science","Social Studies"];
+
+// Auth is kept in memory only (not localStorage): this keeps the file safe
+// to preview inside Claude.ai artifacts. In a real deployment outside
+// Claude, you can swap AUTH persistence for localStorage if you want
+// logins to survive a page refresh — see the comment on setAuth() below.
+let AUTH = null; // { token, user: {id,name,email,role,cls} }
+let CURRENT_SECTION = 'dashboard';
+
+function setAuth(a){
+  AUTH = a;
+  // To persist across refreshes in a real (non-Claude-preview) deployment:
+  //   localStorage.setItem('auth', JSON.stringify(a));
+  // and restore it on load with JSON.parse(localStorage.getItem('auth')).
+}
+
+function toast(msg){
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(()=>t.remove(), 3200);
+}
+function closeModal(){ document.getElementById('modalOverlay').classList.remove('show'); }
+function fmtMoney(n){ return 'Le ' + Number(n||0).toLocaleString(); }
+function fmtDate(d){ return d ? new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) : ''; }
+
+async function api(path, opts={}){
+  const headers = { 'Content-Type': 'application/json' };
+  if (AUTH && AUTH.token) headers['Authorization'] = 'Bearer ' + AUTH.token;
+  let res;
+  try{
+    res = await fetch('/api' + path, { ...opts, headers: { ...headers, ...(opts.headers||{}) } });
+  }catch(err){
+    throw new Error('Could not reach the backend API. If you are previewing this file directly, it must be served by the backend (npm start) — see the README.');
+  }
+  const data = await res.json().catch(()=>({}));
+  if(!res.ok){
+    if(res.status===401){ setAuth(null); showLogin(); }
+    throw new Error(data.error || ('Request failed: ' + res.status));
+  }
+  return data;
+}
+
+/* ---------------- AUTH ---------------- */
+async function login(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  const errBox = document.getElementById('loginErr');
+  errBox.style.display = 'none';
+  if(!email || !password){ errBox.textContent='Enter your email and password.'; errBox.style.display='block'; return; }
+  try{
+    const data = await api('/auth/login', { method:'POST', body: JSON.stringify({email, password}) });
+    setAuth(data);
+    showApp();
+  }catch(err){
+    errBox.textContent = err.message;
+    errBox.style.display = 'block';
+  }
+}
+function logout(){
+  setAuth(null);
+  showLogin();
+}
+function showLogin(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+}
+function showApp(){
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('sideUserName').textContent = AUTH.user.name;
+  document.getElementById('sideUserRole').textContent = AUTH.user.role.charAt(0).toUpperCase()+AUTH.user.role.slice(1) + (AUTH.user.cls ? ' · '+AUTH.user.cls : '');
+  buildNav();
+  goSection('dashboard');
+}
+
+/* ---------------- NAV ---------------- */
+const NAV_ITEMS = [
+  {id:'dashboard', label:'Dashboard', roles:['admin','teacher','parent']},
+  {id:'students', label:'Students', roles:['admin','teacher']},
+  {id:'fees', label:'Fees', roles:['admin']},
+  {id:'grades', label:'Grades', roles:['admin','teacher']},
+  {id:'attendance', label:'Attendance', roles:['admin','teacher']},
+  {id:'timetable', label:'Timetable', roles:['admin','teacher','parent']},
+  {id:'staff', label:'Staff', roles:['admin']},
+  {id:'payroll', label:'Payroll', roles:['admin']},
+  {id:'sms', label:'SMS Messaging', roles:['admin','teacher']},
+  {id:'enquiries', label:'Enquiries', roles:['admin','teacher','parent']},
+];
+function buildNav(){
+  const role = AUTH.user.role;
+  document.getElementById('navItems').innerHTML = NAV_ITEMS
+    .filter(n=>n.roles.includes(role))
+    .map(n=>`<div class="nav-item" id="nav-${n.id}" onclick="goSection('${n.id}')">${n.label}</div>`).join('');
+}
+function goSection(id){
+  CURRENT_SECTION = id;
+  document.querySelectorAll('.nav-item').forEach(e=>e.classList.remove('active'));
+  const navEl = document.getElementById('nav-'+id); if(navEl) navEl.classList.add('active');
+  const item = NAV_ITEMS.find(n=>n.id===id);
+  document.getElementById('pageTitle').textContent = item ? item.label : '';
+  const renderers = {
+    dashboard: renderDashboard, students: renderStudents, fees: renderFees,
+    grades: renderGrades, attendance: renderAttendance, timetable: renderTimetable,
+    staff: renderStaff, payroll: renderPayroll, sms: renderSms, enquiries: renderEnquiries
+  };
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `<div class="empty-state">Loading…</div>`;
+  (renderers[id] || renderDashboard)().catch(err=>{
+    main.innerHTML = `<div class="err-banner" style="display:block;">${err.message}</div>`;
+  });
+}
+
+/* ---------------- DASHBOARD ---------------- */
+async function renderDashboard(){
+  const main = document.getElementById('mainArea');
+  const role = AUTH.user.role;
+  if(role==='parent'){
+    main.innerHTML = `<div class="card"><h3>Welcome, ${AUTH.user.name}</h3>
+      <p style="color:var(--slate);font-size:0.9rem;">Use the Enquiries tab to message the school office, or check the Timetable tab for the class schedule.</p></div>`;
+    return;
+  }
+  const [studentsRes, feesRes, staffRes] = await Promise.all([
+    api('/students'), role==='admin' ? api('/fees') : Promise.resolve({fees:[]}),
+    role==='admin' ? api('/staff') : Promise.resolve({staff:[]})
+  ]);
+  const totalDue = feesRes.fees.reduce((a,f)=>a+Number(f.due),0);
+  const totalPaid = feesRes.fees.reduce((a,f)=>a+Number(f.paid),0);
+  main.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-card"><div class="lbl">Students</div><div class="val">${studentsRes.students.length}</div></div>
+      ${role==='admin' ? `
+      <div class="stat-card"><div class="lbl">Fees collected</div><div class="val">${fmtMoney(totalPaid)}</div></div>
+      <div class="stat-card"><div class="lbl">Fees outstanding</div><div class="val">${fmtMoney(totalDue-totalPaid)}</div></div>
+      <div class="stat-card"><div class="lbl">Staff</div><div class="val">${staffRes.staff.length}</div></div>` : ``}
+    </div>
+    <div class="card"><h3>Signed in as</h3>
+      <p style="font-size:0.9rem;color:var(--slate);">${AUTH.user.name} — ${AUTH.user.role}${AUTH.user.cls? ' ('+AUTH.user.cls+')':''}</p>
+      <p style="font-size:0.82rem;color:var(--slate);">Every number above comes live from the real database — refresh, and it stays exactly where you left it.</p>
+    </div>`;
+}
+
+/* ---------------- STUDENTS ---------------- */
+async function renderStudents(){
+  const { students } = await api('/students');
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="card">
+      <div class="card-head"><h3>All students (${students.length})</h3>
+        ${AUTH.user.role==='admin' ? `<button class="btn btn-primary" onclick="openStudentModal()">+ Add student</button>` : ``}
+      </div>
+      <table><thead><tr><th>Name</th><th>Class</th><th>Guardian</th><th>Phone</th><th>Fee balance</th>${AUTH.user.role==='admin'?'<th></th>':''}</tr></thead>
+      <tbody>${students.map(s=>`
+        <tr><td>${s.name}</td><td><span class="pill pill-navy">${s.cls}</span></td><td>${s.guardian_name||''}</td><td class="mono">${s.guardian_phone||''}</td>
+        <td class="mono">${fmtMoney((s.due||0)-(s.paid||0))}</td>
+        ${AUTH.user.role==='admin'?`<td><button class="link-btn" onclick="deleteStudent('${s.id}')">Remove</button></td>`:''}</tr>`).join('') || `<tr><td colspan="6"><div class="empty-state">No students yet</div></td></tr>`}
+      </tbody></table>
+    </div>`;
+}
+function openStudentModal(){
+  document.getElementById('modalBody').innerHTML = `
+    <h3>Add student</h3>
+    <div class="field"><label>Full name</label><input id="mStuName"></div>
+    <div class="grid-2">
+      <div class="field"><label>Class</label><select id="mStuCls">${CLASSES.map(c=>`<option>${c}</option>`).join('')}</select></div>
+      <div class="field"><label>Gender</label><select id="mStuGender"><option value="F">Female</option><option value="M">Male</option></select></div>
+    </div>
+    <div class="field"><label>Date of birth</label><input type="date" id="mStuDob"></div>
+    <div class="grid-2">
+      <div class="field"><label>Guardian name</label><input id="mStuGName"></div>
+      <div class="field"><label>Guardian phone</label><input id="mStuGPhone" placeholder="+232 76 000 000"></div>
+    </div>
+    <div class="field"><label>Termly fee due (Le)</label><input type="number" id="mStuFee" value="450000"></div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveStudent()">Add</button></div>`;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+async function saveStudent(){
+  const name = document.getElementById('mStuName').value.trim();
+  if(!name){ toast('Enter a name'); return; }
+  await api('/students', { method:'POST', body: JSON.stringify({
+    name, cls: document.getElementById('mStuCls').value, gender: document.getElementById('mStuGender').value,
+    dob: document.getElementById('mStuDob').value || null,
+    guardianName: document.getElementById('mStuGName').value.trim(),
+    guardianPhone: document.getElementById('mStuGPhone').value.trim(),
+    feeDue: Number(document.getElementById('mStuFee').value)||450000
+  })});
+  closeModal(); toast('Student added'); goSection('students');
+}
+async function deleteStudent(id){
+  await api('/students/'+id, { method:'DELETE' });
+  toast('Student removed'); goSection('students');
+}
+
+/* ---------------- FEES ---------------- */
+async function renderFees(){
+  const { fees } = await api('/fees');
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="card"><table><thead><tr><th>Student</th><th>Class</th><th>Due</th><th>Paid</th><th>Balance</th><th></th></tr></thead>
+    <tbody>${fees.map(f=>`
+      <tr><td>${f.name}</td><td><span class="pill pill-navy">${f.cls}</span></td><td class="mono">${fmtMoney(f.due)}</td>
+      <td class="mono">${fmtMoney(f.paid)}</td>
+      <td class="mono"><span class="pill ${f.balance<=0?'pill-success':'pill-warn'}">${fmtMoney(f.balance)}</span></td>
+      <td><button class="link-btn" onclick="openPaymentModal('${f.student_id}','${f.name}')">Record payment</button></td></tr>`).join('') || `<tr><td colspan="6"><div class="empty-state">No fee records yet</div></td></tr>`}
+    </tbody></table></div>`;
+}
+function openPaymentModal(studentId, name){
+  document.getElementById('modalBody').innerHTML = `
+    <h3>Record payment — ${name}</h3>
+    <div class="field"><label>Amount (Le)</label><input type="number" id="mPayAmt"></div>
+    <div class="field"><label>Date</label><input type="date" id="mPayDate" value="${new Date().toISOString().slice(0,10)}"></div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="savePayment('${studentId}')">Save</button></div>`;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+async function savePayment(studentId){
+  const amount = Number(document.getElementById('mPayAmt').value);
+  if(!amount || amount<=0){ toast('Enter a valid amount'); return; }
+  await api('/fees/'+studentId+'/payments', { method:'POST', body: JSON.stringify({amount, paidOn: document.getElementById('mPayDate').value}) });
+  closeModal(); toast('Payment recorded'); goSection('fees');
+}
+
+/* ---------------- GRADES ---------------- */
+async function renderGrades(){
+  const cls = AUTH.user.cls && AUTH.user.role==='teacher' ? AUTH.user.cls : CLASSES[0];
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="card">
+      <div class="card-head">
+        <div class="field" style="margin:0;"><select id="gradeCls" onchange="reloadGrades()">${CLASSES.map(c=>`<option ${c===cls?'selected':''}>${c}</option>`).join('')}</select></div>
+        <div class="field" style="margin:0;"><select id="gradeTerm" onchange="reloadGrades()"><option>Term 1</option><option>Term 2</option><option>Term 3</option></select></div>
+      </div>
+      <div id="gradesTableWrap"></div>
+    </div>`;
+  await reloadGrades();
+}
+async function reloadGrades(){
+  const cls = document.getElementById('gradeCls').value;
+  const term = document.getElementById('gradeTerm').value;
+  const [{students}, {grades}] = await Promise.all([
+    api('/students'), api(`/grades?cls=${encodeURIComponent(cls)}&term=${encodeURIComponent(term)}`)
+  ]);
+  const clsStudents = students.filter(s=>s.cls===cls);
+  document.getElementById('gradesTableWrap').innerHTML = `
+    <table><thead><tr><th>Student</th>${SUBJECTS.map(s=>`<th>${s}</th>`).join('')}</tr></thead>
+    <tbody>${clsStudents.map(s=>`<tr><td>${s.name}</td>${SUBJECTS.map(sub=>{
+      const g = grades.find(x=>x.student_id===s.id && x.subject===sub);
+      return `<td><input type="number" min="0" max="100" style="width:60px;padding:5px;border-radius:6px;border:1px solid var(--line);" value="${g?g.score:''}" onchange="saveGrade('${s.id}','${term}','${sub}',this.value)"></td>`;
+    }).join('')}</tr>`).join('') || `<tr><td colspan="${SUBJECTS.length+1}"><div class="empty-state">No students in this class</div></td></tr>`}
+    </tbody></table>`;
+}
+async function saveGrade(studentId, term, subject, score){
+  await api('/grades', { method:'POST', body: JSON.stringify({studentId, term, subject, score: Number(score)}) });
+  toast('Score saved');
+}
+
+/* ---------------- ATTENDANCE ---------------- */
+async function renderAttendance(){
+  const cls = AUTH.user.cls && AUTH.user.role==='teacher' ? AUTH.user.cls : CLASSES[0];
+  const today = new Date().toISOString().slice(0,10);
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="card">
+      <div class="card-head">
+        <div class="field" style="margin:0;"><select id="attCls" onchange="reloadAttendance()">${CLASSES.map(c=>`<option ${c===cls?'selected':''}>${c}</option>`).join('')}</select></div>
+        <div class="field" style="margin:0;"><input type="date" id="attDate" value="${today}" onchange="reloadAttendance()"></div>
+      </div>
+      <div id="attTableWrap"></div>
+    </div>`;
+  await reloadAttendance();
+}
+async function reloadAttendance(){
+  const cls = document.getElementById('attCls').value;
+  const date = document.getElementById('attDate').value;
+  const [{students}, {attendance}] = await Promise.all([
+    api('/students'), api(`/attendance?cls=${encodeURIComponent(cls)}&date=${date}`)
+  ]);
+  const clsStudents = students.filter(s=>s.cls===cls);
+  document.getElementById('attTableWrap').innerHTML = `
+    <table><thead><tr><th>Student</th><th>Status</th></tr></thead>
+    <tbody>${clsStudents.map(s=>{
+      const a = attendance.find(x=>x.student_id===s.id);
+      return `<tr><td>${s.name}</td><td>
+        <select onchange="markAttendance('${s.id}','${cls}','${date}',this.value)">
+          <option value="">— Not marked —</option>
+          <option value="present" ${a&&a.status==='present'?'selected':''}>Present</option>
+          <option value="absent" ${a&&a.status==='absent'?'selected':''}>Absent</option>
+          <option value="late" ${a&&a.status==='late'?'selected':''}>Late</option>
+        </select></td></tr>`;
+    }).join('') || `<tr><td colspan="2"><div class="empty-state">No students in this class</div></td></tr>`}
+    </tbody></table>`;
+}
+async function markAttendance(studentId, cls, date, status){
+  if(!status) return;
+  await api('/attendance', { method:'POST', body: JSON.stringify({studentId, cls, date, status}) });
+  toast('Attendance saved');
+}
+
+/* ---------------- TIMETABLE ---------------- */
+async function renderTimetable(){
+  const cls = AUTH.user.cls || CLASSES[0];
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="card">
+      <div class="field" style="max-width:220px;"><select id="ttCls" onchange="reloadTimetable()">${CLASSES.map(c=>`<option ${c===cls?'selected':''}>${c}</option>`).join('')}</select></div>
+      <div id="ttWrap"></div>
+    </div>`;
+  await reloadTimetable();
+}
+async function reloadTimetable(){
+  const cls = document.getElementById('ttCls').value;
+  const { timetable } = await api('/timetable?cls='+encodeURIComponent(cls));
+  const canEdit = AUTH.user.role==='admin';
+  document.getElementById('ttWrap').innerHTML = `
+    <table><thead><tr><th>Period</th>${DAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead>
+    <tbody>${[0,1,2,3,4,5,6,7].map(p=>`<tr><td class="mono">P${p+1}</td>${DAYS.map(day=>{
+      const slot = timetable.find(t=>t.day===day && t.period_index===p);
+      const val = slot ? slot.subject : '';
+      return canEdit
+        ? `<td><input value="${val}" style="width:110px;padding:5px;border-radius:6px;border:1px solid var(--line);" onchange="saveSlot('${cls}','${day}',${p},this.value)"></td>`
+        : `<td>${val}</td>`;
+    }).join('')}</tr>`).join('')}</tbody></table>`;
+}
+async function saveSlot(cls, day, periodIndex, subject){
+  await api('/timetable', { method:'PUT', body: JSON.stringify({cls, day, periodIndex, subject}) });
+  toast('Timetable updated');
+}
+
+/* ---------------- STAFF ---------------- */
+async function renderStaff(){
+  const { staff } = await api('/staff');
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="card">
+      <div class="card-head"><h3>Staff (${staff.length})</h3><button class="btn btn-primary" onclick="openStaffModal()">+ Add staff</button></div>
+      <table><thead><tr><th>Name</th><th>Role</th><th>Subject/Dept</th><th>Phone</th><th>Basic salary</th><th></th></tr></thead>
+      <tbody>${staff.map(s=>`<tr><td>${s.name}</td><td><span class="pill pill-navy">${s.role}</span></td><td>${s.subject||''}</td><td class="mono">${s.phone||''}</td>
+        <td class="mono">${fmtMoney(s.basic)}</td>
+        <td><button class="link-btn" onclick="goSection('payroll')">Payroll</button><button class="link-btn" onclick="deleteStaff('${s.id}')">Remove</button></td></tr>`).join('') || `<tr><td colspan="6"><div class="empty-state">No staff yet</div></td></tr>`}
+      </tbody></table>
+    </div>`;
+}
+function openStaffModal(){
+  document.getElementById('modalBody').innerHTML = `
+    <h3>Add staff member</h3>
+    <div class="field"><label>Name</label><input id="mStfName"></div>
+    <div class="field"><label>Role</label><select id="mStfRole"><option>Teacher</option><option>Head Teacher</option><option>Bursar</option><option>Support Staff</option></select></div>
+    <div class="field"><label>Subject/Dept</label><input id="mStfSubject"></div>
+    <div class="field"><label>Phone</label><input id="mStfPhone"></div>
+    <div class="field"><label>Monthly basic salary (Le)</label><input type="number" id="mStfSalary" value="2500000"></div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveStaff()">Add</button></div>`;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+async function saveStaff(){
+  const name = document.getElementById('mStfName').value.trim();
+  if(!name){ toast('Enter a name'); return; }
+  await api('/staff', { method:'POST', body: JSON.stringify({
+    name, role: document.getElementById('mStfRole').value, subject: document.getElementById('mStfSubject').value.trim(),
+    phone: document.getElementById('mStfPhone').value.trim(), basic: Number(document.getElementById('mStfSalary').value)||2500000
+  })});
+  closeModal(); toast('Staff added'); goSection('staff');
+}
+async function deleteStaff(id){
+  await api('/staff/'+id, { method:'DELETE' });
+  toast('Staff removed'); goSection('staff');
+}
+
+/* ---------------- PAYROLL ---------------- */
+async function renderPayroll(){
+  const [{staff}, {payslips}] = await Promise.all([api('/staff'), api('/payroll/payslips')]);
+  const totalNet = staff.reduce((a,s)=>a + (Number(s.basic)+Number(s.housing)+Number(s.transport)+Number(s.other) - Number(s.nassit)-Number(s.tax)-Number(s.other_deduction)), 0);
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-card"><div class="lbl">Staff on payroll</div><div class="val">${staff.length}</div></div>
+      <div class="stat-card"><div class="lbl">Monthly net payroll</div><div class="val">Le ${(totalNet/1000).toFixed(0)}k</div></div>
+    </div>
+    <div class="card">
+      <div class="card-head"><h3>Salary setup</h3></div>
+      <table><thead><tr><th>Staff</th><th>Basic</th><th>Allowances</th><th>Deductions</th><th>Net</th><th></th></tr></thead>
+      <tbody>${staff.map(s=>{
+        const net = Number(s.basic)+Number(s.housing)+Number(s.transport)+Number(s.other) - Number(s.nassit)-Number(s.tax)-Number(s.other_deduction);
+        return `<tr><td>${s.name}</td><td class="mono">${fmtMoney(s.basic)}</td>
+        <td class="mono">${fmtMoney(Number(s.housing)+Number(s.transport)+Number(s.other))}</td>
+        <td class="mono">${fmtMoney(Number(s.nassit)+Number(s.tax)+Number(s.other_deduction))}</td>
+        <td class="mono" style="font-weight:700;">${fmtMoney(net)}</td>
+        <td><button class="link-btn" onclick='openSalarySetup(${JSON.stringify(s)})'>Edit</button></td></tr>`;
+      }).join('')}</tbody></table>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Generate pay slip</h3>
+        <div class="field"><label>Staff</label><select id="payStaff">${staff.map(s=>`<option value="${s.id}">${s.name}</option>`).join('')}</select></div>
+        <div class="grid-2">
+          <div class="field"><label>Month</label><select id="payMonth">${["January","February","March","April","May","June","July","August","September","October","November","December"].map(m=>`<option ${m===new Date().toLocaleString('en-GB',{month:'long'})?'selected':''}>${m}</option>`).join('')}</select></div>
+          <div class="field"><label>Year</label><input type="number" id="payYear" value="${new Date().getFullYear()}"></div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="generatePayslip()">Generate pay slip</button>
+      </div>
+      <div class="card">
+        <h3>Pay slip history</h3>
+        <table><thead><tr><th>Staff</th><th>Period</th><th>Net</th><th></th></tr></thead>
+        <tbody>${payslips.map(p=>`<tr><td>${p.staff_name}</td><td class="mono">${p.month} ${p.year}</td><td class="mono">${fmtMoney(p.net)}</td>
+          <td><button class="link-btn" onclick='viewPayslip(${JSON.stringify(p)})'>View</button><a class="link-btn" href="/api/payroll/payslips/${p.id}/pdf" target="_blank">PDF</a></td></tr>`).join('') || `<tr><td colspan="4"><div class="empty-state">No pay slips yet</div></td></tr>`}
+        </tbody></table>
+      </div>
+    </div>`;
+}
+function openSalarySetup(s){
+  document.getElementById('modalBody').innerHTML = `
+    <h3>Salary setup — ${s.name}</h3>
+    <div class="field"><label>Basic salary</label><input type="number" id="sBasic" value="${s.basic}" oninput="document.getElementById('sNassit').value=Math.round(this.value*0.05)"></div>
+    <div class="grid-2"><div class="field"><label>Housing</label><input type="number" id="sHousing" value="${s.housing}"></div>
+    <div class="field"><label>Transport</label><input type="number" id="sTransport" value="${s.transport}"></div></div>
+    <div class="field"><label>Other allowance</label><input type="number" id="sOther" value="${s.other}"></div>
+    <div class="grid-2"><div class="field"><label>NASSIT (5%)</label><input type="number" id="sNassit" value="${s.nassit}"></div>
+    <div class="field"><label>Tax</label><input type="number" id="sTax" value="${s.tax}"></div></div>
+    <div class="field"><label>Other deduction</label><input type="number" id="sOtherDed" value="${s.other_deduction}"></div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveSalarySetup('${s.id}')">Save</button></div>`;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+async function saveSalarySetup(staffId){
+  await api('/payroll/salary/'+staffId, { method:'PUT', body: JSON.stringify({
+    basic:Number(document.getElementById('sBasic').value), housing:Number(document.getElementById('sHousing').value),
+    transport:Number(document.getElementById('sTransport').value), other:Number(document.getElementById('sOther').value),
+    nassit:Number(document.getElementById('sNassit').value), tax:Number(document.getElementById('sTax').value),
+    otherDeduction:Number(document.getElementById('sOtherDed').value)
+  })});
+  closeModal(); toast('Salary updated'); goSection('payroll');
+}
+async function generatePayslip(){
+  const staffId = document.getElementById('payStaff').value;
+  const month = document.getElementById('payMonth').value;
+  const year = Number(document.getElementById('payYear').value);
+  const { payslip } = await api('/payroll/payslips', { method:'POST', body: JSON.stringify({staffId, month, year}) });
+  toast('Pay slip generated');
+  goSection('payroll');
+  setTimeout(()=>viewPayslip(payslip), 300);
+}
+function viewPayslip(p){
+  document.getElementById('modalBody').innerHTML = `
+    <div class="payslip-box">
+      <div class="ps-head"><div><b>J.T. Reffell Memorial French Friendship Primary</b><div class="fr-tag">Fiche de paie — ${p.month} ${p.year}</div></div>
+      <div style="text-align:right;"><b>${p.staff_name}</b><div>${p.role}</div></div></div>
+      <table><tbody>
+        <tr><td>Basic</td><td class="mono">${fmtMoney(p.basic)}</td><td>NASSIT</td><td class="mono">${fmtMoney(p.nassit)}</td></tr>
+        <tr><td>Housing</td><td class="mono">${fmtMoney(p.housing)}</td><td>Tax</td><td class="mono">${fmtMoney(p.tax)}</td></tr>
+        <tr><td>Transport</td><td class="mono">${fmtMoney(p.transport)}</td><td>Other ded.</td><td class="mono">${fmtMoney(p.other_deduction)}</td></tr>
+        <tr><td>Other</td><td class="mono">${fmtMoney(p.other)}</td><td></td><td></td></tr>
+      </tbody></table>
+      <div class="ps-net"><span>Net pay</span><span>${fmtMoney(p.net)}</span></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Close</button><a class="btn btn-primary" href="/api/payroll/payslips/${p.id}/pdf" target="_blank">Download real PDF</a></div>`;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+/* ---------------- SMS ---------------- */
+async function renderSms(){
+  const [{students}, {log}] = await Promise.all([api('/students'), api('/sms')]);
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="grid-2">
+      <div class="card">
+        <h3>Send message</h3>
+        <div class="field"><label>Recipient</label><select id="smsTarget">
+          ${CLASSES.map(c=>`<option value="cls:${c}">Class-wide — ${c}</option>`).join('')}
+          ${students.map(s=>`<option value="stu:${s.id}:${s.guardian_phone||''}">${s.guardian_name||'Guardian'} (guardian of ${s.name})</option>`).join('')}
+        </select></div>
+        <div class="field"><label>Message</label><textarea id="smsMessage" rows="4"></textarea></div>
+        <button class="btn btn-primary btn-block" onclick="sendSmsMsg()">Send</button>
+        <div class="hint">Runs in simulated mode until a real SMS provider key is set on the backend — see backend README.</div>
+      </div>
+      <div class="card"><h3>Message log</h3>
+        <div>${log.map(m=>`<div style="border-bottom:1px solid var(--line);padding:8px 0;">
+          <div style="display:flex;justify-content:space-between;"><b style="font-size:0.85rem;">${m.to_label}</b>
+          <span class="pill ${m.status==='sent'?'pill-success':'pill-warn'}">${m.status}</span></div>
+          <div style="font-size:0.82rem;color:var(--slate);">${m.message}</div>
+          <div class="mono" style="font-size:0.72rem;">${new Date(m.sent_at).toLocaleString()} · ${m.recipient_count} recipient(s)</div></div>`).join('') || `<div class="empty-state">No messages sent yet</div>`}
+        </div>
+      </div>
+    </div>`;
+}
+async function sendSmsMsg(){
+  const target = document.getElementById('smsTarget').value;
+  const message = document.getElementById('smsMessage').value.trim();
+  if(!message){ toast('Write a message first'); return; }
+  let toLabel, to, recipientCount = 1;
+  if(target.startsWith('cls:')){ toLabel = 'Class-wide — '+target.slice(4); to = '00000000'; recipientCount = 0; }
+  else { const [,, phone] = target.split(':'); toLabel = 'Guardian'; to = phone || '00000000'; }
+  await api('/sms', { method:'POST', body: JSON.stringify({toLabel, to, message, recipientCount}) });
+  toast('Message sent (see log for delivery status)');
+  goSection('sms');
+}
+
+/* ---------------- ENQUIRIES ---------------- */
+let ACTIVE_ENQUIRY = null;
+async function renderEnquiries(){
+  const { enquiries } = await api('/enquiries');
+  const main = document.getElementById('mainArea');
+  main.innerHTML = `
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-head"><h3>Enquiries</h3><button class="btn btn-ghost" onclick="openNewEnquiry()">+ New</button></div>
+        <div id="enqList">${enquiries.map(e=>`<div style="padding:8px;border-bottom:1px solid var(--line);cursor:pointer;" onclick="openEnquiry('${e.id}')">
+          <b style="font-size:0.85rem;">${e.name}</b><div class="fr-tag" style="color:var(--slate);font-style:normal;">${e.topic}</div>
+          <div style="font-size:0.78rem;color:var(--slate);">${e.last_message||''}</div></div>`).join('') || `<div class="empty-state">No enquiries yet</div>`}
+        </div>
+      </div>
+      <div class="card"><h3>Conversation</h3><div id="enqMsgs" style="max-height:340px;overflow-y:auto;margin-bottom:12px;"></div>
+        <div class="field" style="display:flex;gap:8px;"><input id="enqReply" placeholder="Type a reply..." style="flex:1;" onkeydown="if(event.key==='Enter') sendEnquiryReply();">
+        <button class="btn btn-primary" onclick="sendEnquiryReply()">Send</button></div>
+      </div>
+    </div>`;
+  if(enquiries.length) openEnquiry(enquiries[0].id);
+}
+async function openEnquiry(id){
+  ACTIVE_ENQUIRY = id;
+  const { messages } = await api(`/enquiries/${id}/messages`);
+  document.getElementById('enqMsgs').innerHTML = messages.map(m=>`
+    <div style="margin-bottom:8px;text-align:${m.sender==='school'?'right':'left'};">
+      <div style="display:inline-block;background:${m.sender==='school'?'var(--navy)':'var(--paper)'};color:${m.sender==='school'?'#fff':'var(--ink)'};padding:8px 12px;border-radius:10px;max-width:80%;font-size:0.85rem;">${m.body}</div>
+    </div>`).join('');
+}
+async function sendEnquiryReply(){
+  const body = document.getElementById('enqReply').value.trim();
+  if(!body || !ACTIVE_ENQUIRY) return;
+  await api(`/enquiries/${ACTIVE_ENQUIRY}/messages`, { method:'POST', body: JSON.stringify({sender:'school', body}) });
+  document.getElementById('enqReply').value='';
+  openEnquiry(ACTIVE_ENQUIRY);
+}
+function openNewEnquiry(){
+  document.getElementById('modalBody').innerHTML = `
+    <h3>New enquiry</h3>
+    <div class="field"><label>Name</label><input id="mEnqName"></div>
+    <div class="field"><label>Topic</label><input id="mEnqTopic"></div>
+    <div class="field"><label>Message</label><textarea id="mEnqMsg" rows="3"></textarea></div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveNewEnquiry()">Submit</button></div>`;
+  document.getElementById('modalOverlay').classList.add('show');
+}
+async function saveNewEnquiry(){
+  const name = document.getElementById('mEnqName').value.trim();
+  const topic = document.getElementById('mEnqTopic').value.trim() || 'General enquiry';
+  const body = document.getElementById('mEnqMsg').value.trim();
+  if(!name || !body){ toast('Fill in your name and message'); return; }
+  await api('/enquiries', { method:'POST', body: JSON.stringify({name, topic, body}) });
+  closeModal(); toast('Enquiry submitted'); goSection('enquiries');
+}
+
+/* ---------------- INIT ---------------- */
+showLogin();
+</script>
+</body>
+</html>
